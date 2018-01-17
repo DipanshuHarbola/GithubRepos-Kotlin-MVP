@@ -2,15 +2,14 @@ package com.deepanshu.githubrepos.di
 
 import android.app.Application
 import android.content.Context
-import com.deepanshu.githubrepos.GithubApp
-import com.deepanshu.githubrepos.utils.NetworkUtil
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
 import com.deepanshu.githubrepos.services.api.ApiClient
 import com.deepanshu.githubrepos.services.api.ApiServices
 import com.deepanshu.githubrepos.services.repodata.GithubData
 import com.deepanshu.githubrepos.services.repodata.GithubDataSource
+import com.deepanshu.githubrepos.utils.NetworkUtil
+import dagger.Module
+import dagger.Provides
+import javax.inject.Singleton
 
 
 @Module

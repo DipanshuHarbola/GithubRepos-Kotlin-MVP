@@ -1,6 +1,5 @@
 package com.deepanshu.githubrepos.ui.main
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -13,15 +12,14 @@ import com.deepanshu.githubrepos.model.GithubRepo
 import com.deepanshu.githubrepos.ui.adapter.GithubRecyclerAdapter
 import com.deepanshu.githubrepos.ui.base.BaseActivity
 import com.deepanshu.githubrepos.utils.NetworkUtil
-import dagger.android.AndroidInjection
-import dagger.android.DispatchingAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
 class MainActivity : BaseActivity(), MainActivityContract.View {
 
-    lateinit var recyclerAdapter: GithubRecyclerAdapter
+    private val TAG: String = "MainActivity"
+    private lateinit var recyclerAdapter: GithubRecyclerAdapter
 
     @Inject
     lateinit var network: NetworkUtil
@@ -33,6 +31,8 @@ class MainActivity : BaseActivity(), MainActivityContract.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mPresenter.subscribe()
+
         recyclerAdapter = GithubRecyclerAdapter(this)
         list_view_repos.layoutManager = LinearLayoutManager(this)
         list_view_repos.adapter = recyclerAdapter
@@ -42,7 +42,7 @@ class MainActivity : BaseActivity(), MainActivityContract.View {
             if (!TextUtils.isEmpty(username)) {
                 if (!network.isConnected()){
                     hideKeyboard()
-                    Snackbar.make(parent_layout, "No internet available", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(parent_layout, getString(R.string.no_internet), Snackbar.LENGTH_SHORT).show()
                 }
                 else {
                     mPresenter.gitHubUser(username)
@@ -53,18 +53,23 @@ class MainActivity : BaseActivity(), MainActivityContract.View {
         }
     }
 
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
     }
 
     override fun updateData(repo: List<GithubRepo>) {
         recyclerAdapter.setGitHubRepos(repo)
-        Log.i("repo", repo.toString())
+        Log.i(TAG, repo.toString())
     }
 
-    override fun showMessage(s: String) {
-        Snackbar.make(parent_layout, s, Snackbar.LENGTH_SHORT).show()
+    override fun showMessage(msg: String) {
+        Snackbar.make(parent_layout, msg, Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mPresenter.unSubscribe()
     }
 
 }

@@ -1,21 +1,17 @@
 package com.deepanshu.githubrepos.ui.main
 
 import android.util.Log
-import com.deepanshu.githubrepos.model.GithubRepo
 import com.deepanshu.githubrepos.services.repodata.GithubDataSource
 import io.reactivex.android.schedulers.AndroidSchedulers
-import javax.inject.Inject
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.functions.Consumer
-import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import javax.inject.Inject
 
 
-class MainPresenterImplement @Inject constructor(val githubDataSource: GithubDataSource, val view: MainActivityContract.View) : MainActivityContract.Presenter {
+class MainPresenterImplement @Inject constructor(private val githubDataSource: GithubDataSource, val view: MainActivityContract.View) : MainActivityContract.Presenter {
 
     private val TAG: String = "PresenterImp"
     private val mCompositeDisposable: CompositeDisposable? = CompositeDisposable()
@@ -42,6 +38,7 @@ class MainPresenterImplement @Inject constructor(val githubDataSource: GithubDat
                         { t ->
                             Log.e(TAG, t.message)
                             try {
+                                @Suppress("DEPRECATION")
                                 val erroeJson = (t as retrofit2.adapter.rxjava2.HttpException).response().errorBody()!!.source().readUtf8()
                                 val jsonObject = JSONObject(erroeJson)
                                 val errorMessage = jsonObject.getString("message")
@@ -58,32 +55,6 @@ class MainPresenterImplement @Inject constructor(val githubDataSource: GithubDat
     }
 
     override fun unSubscribe() {
-        mCompositeDisposable?.clear();
+        mCompositeDisposable?.clear()
     }
-    
-    /*fun xyx(){
-        val disposable = githubDataSource.getRepos("")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        { githubRepo ->
-                            Log.i(TAG, "Server response - " + githubRepo)
-                            view.updateData(githubRepo)
-                        },
-                        { t ->
-                            Log.e(TAG, t.message)
-                            try {
-                                val erroeJson = (t as retrofit2.adapter.rxjava2.HttpException).response().errorBody()!!.source().readUtf8()
-                                val jsonObject = JSONObject(erroeJson)
-                                val errorMessage = jsonObject.getString("message")
-                                view.showMessage(errorMessage)
-                            } catch (e: NullPointerException) {
-                                e.printStackTrace()
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                            } catch (e: JSONException) {
-                                e.printStackTrace()
-                            }
-                        })
-    }*/
 }
