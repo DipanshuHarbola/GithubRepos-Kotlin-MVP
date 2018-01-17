@@ -34,11 +34,11 @@ class MainActivity : BaseActivity(), MainActivityContract.View {
         mPresenter.subscribe()
 
         recyclerAdapter = GithubRecyclerAdapter(this)
-        list_view_repos.layoutManager = LinearLayoutManager(this)
-        list_view_repos.adapter = recyclerAdapter
+        rv_repos.layoutManager = LinearLayoutManager(this)
+        rv_repos.adapter = recyclerAdapter
 
-        button_search.setOnClickListener {
-            val username = edit_text_username.text.toString()
+        btn_search.setOnClickListener {
+            val username = edt_username.text.toString()
             if (!TextUtils.isEmpty(username)) {
                 if (!network.isConnected()){
                     hideKeyboard()
