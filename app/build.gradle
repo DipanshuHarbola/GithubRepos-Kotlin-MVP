@@ -27,12 +27,6 @@ android {
         experimental = true
     }
 
-    // Always show the result of every unit test, even if it passes.
-    testOptions.unitTests.all {
-        testLogging {
-            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
-        }
-    }
 }
 
 ext {
@@ -41,7 +35,6 @@ ext {
     rxjavaVersion = '2.1.8'
     rxandroidVersion = '2.0.1'
     retrofitVersion = '2.3.0'
-    mockitoVersion = '2.7.22'
     espressoVersion = '3.0.1'
     testRunnerVersion = '1.0.1'
 }
@@ -74,10 +67,6 @@ dependencies {
 
     // Local Unit Tests
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:'+mockitoVersion
-
-    // Android Unit Tests
-    androidTestImplementation 'org.mockito:mockito-android:'+mockitoVersion
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation 'com.android.support.test:runner:'+testRunnerVersion
